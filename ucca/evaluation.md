@@ -3,7 +3,7 @@ The evaluation process compares the gold-standard annotation of a specific passa
 Both passages are of Passage object type, which is an object that contains the connected graph that represents the annotation of the passage.
 Our evaluation includes the recall, precision and F1 scores. The calculation of these scores is done by comparing each edge's labels and yield, which is the literals that are under the edge's child node (if we look at the annotation as a tree).
 We can also do an unlabled evaluation, and then for each edge we'll compare only its yield. It's important to know that when there's a remote edge, it's ignored in the yield comparison, but we do look at it when comparing lables of edges.
-Also, when there is an implicit node (pay attention that unlike the remote edge, which is an edge, the implicit node is a node), it is completely ignored in the process of evaluation.
+Also, when there is an implicit node, it is completely ignored in the process of evaluation.
 Now let's look more closely at the evaluate function:
 The evaluate function receives the following input parameters:
 1. guessed: Passage object to evaluate
