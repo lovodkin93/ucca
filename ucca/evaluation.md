@@ -9,10 +9,10 @@ The evaluate function receives the following input parameters:
 1. param guessed: Passage object to evaluate
 2. param ref: reference (gold standard) Passage object to compare to
 3. param converter: optional function to apply to passages before evaluation. One can choose to convert to the following formats:
-    a. site XML
-    b. standard XML
-    c. conll (CoNLL-X dependency parsing shared task)
-    d. sdp (SemEval 2015 semantic dependency parsing shared task)
+    - site XML
+    - standard XML
+    - conll (CoNLL-X dependency parsing shared task)
+    - sdp (SemEval 2015 semantic dependency parsing shared task)
 4. param verbose: whether to print the results
 5. param constructions: names of construction types to include in the evaluation. By construction we mean that the evaluation can be done on specific types of edges, for example just on the Proccess and State edges. The default construction includes the following edges:
     a. primary edges
