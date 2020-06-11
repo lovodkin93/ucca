@@ -28,10 +28,10 @@ The evaluate function receives the following input parameters:
 7. fscore: whether to compute precision, recall and f1 score
 8. errors: whether to print the mistakes (prints something similar to a confusion matrix)
 9. normalize: flatten centers and move common functions to root before evaluation - modifies passages. There's an option to normalize seperately each passage or to normalize them jointly. 
-10. param eval_type: specific evaluation type(s) to limit to. One can choose one of the following evaluation types:
+10. eval_type: specific evaluation type(s) to limit to. One can choose one of the following evaluation types:
     - labeled - in the process of evaluation, both the labels of the edges and their yields are compared.
     - unlabeld - in the process of evaluation, only the edges' yields are compared.
     - weak_labeld - in the process of evaluation, certain types of labels will be considered the same - for example process and state edges will be considered the same and only their yields will be compared,  while process and participant will not be considered the same.
 11. ref_yield_tags: reference passage for fine-grained evaluation. In other words, it enables us to do evaluation to edges of different types of labels (that are not part of the UCCA labels), such as subject, object and so on. Nevertheless, the recall, precision and f1 scores will still be calculated based on the UCCA parsing. 
 
-The function evaluate return a Score object, which contains the recall, precision and f1 scores of the generated annotation.
+The function evaluate returns a Score object, which contains the recall, precision and f1 scores of the generated annotation.
