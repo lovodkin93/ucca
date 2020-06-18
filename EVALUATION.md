@@ -37,11 +37,8 @@ The evaluate function receives the following input parameters:
     - unlabeld - in the process of evaluation, only the edges' yields are compared.
     - weak_labeld - in the process of evaluation, certain types of labels will be considered the same - for example process and state edges will be considered the same and only their yields will be compared,  while process and participant will not be considered the same.
 11. ref_yield_tags: reference passage for fine-grained evaluation. In other words, it enables us to do evaluation to edges of different types of labels (that are not part of the UCCA labels), such as subject, object and so on. Nevertheless, the recall, precision and f1 scores will still be calculated based on the UCCA parsing. 
-
 The function evaluate returns a Score object, which contains the recall, precision and f1 scores of the generated annotation.
 
 For more details of the evaluate function, please see the following links:
-
 https://ucca.readthedocs.io/en/latest/api/ucca.evaluation.evaluate.html#ucca.evaluation.evaluate
-
 https://ucca.readthedocs.io/en/latest/api/ucca.evaluation.Scores.html#ucca.evaluation.Scores
