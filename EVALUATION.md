@@ -42,21 +42,23 @@ The function evaluate returns a Score object, which contains the recall, precisi
 For example, by running https://github.com/lovodkin93/ucca/blob/master/ucca/tests/test_validation.py, the following line https://github.com/lovodkin93/ucca/blob/master/ucca/tests/test_evaluation.py#L331 generates a Score class. One of its elements is evaluators, which comprises of three EvaluatorResults classes:
 - 'labeled'
 - 'unlabeled'
-- 'weak_labeled'  
+- 'weak_labeled'
+
 Each of those EvaluatorResults class contain the results for 3 types of edges:
 - primary
 - remote
 - impicit
-\n The results for each such type of edges comprise of:
-errors
-f1
-num_guessed
-num_matches
-num_only_guessed
-num_unly_ref
-num_ref
-p (precision)
-r (recall)
+
+The results for each such type of edges comprise of:
+- errors
+- f1
+- num_guessed
+- num_matches
+- num_only_guessed
+- num_unly_ref
+- num_ref
+- p (precision)
+- r (recall)
 
 For more details of the evaluate function, please see the following links:
 https://ucca.readthedocs.io/en/latest/api/ucca.evaluation.evaluate.html#ucca.evaluation.evaluate
