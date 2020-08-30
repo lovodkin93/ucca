@@ -40,13 +40,13 @@ The evaluate function receives the following input parameters:
 
 The function evaluate returns a Score object, which contains the recall, precision and f1 scores of the generated annotation.
 For example, by running https://github.com/lovodkin93/ucca/blob/master/ucca/tests/test_validation.py, the following line https://github.com/lovodkin93/ucca/blob/master/ucca/tests/test_evaluation.py#L331 generates a Score class. One of its elements is evaluators, which comprises of three EvaluatorResults classes:
-'labeled'
-'unlabeled'
-'weak_labeled'
+- 'labeled'
+- 'unlabeled'
+- 'weak_labeled'
 Each of those EvaluatorResults class contain the results for 3 types of edges:
-primary
-remote
-impicit
+- primary
+- remote
+- impicit
 The results for each such type of edges comprise of:
 errors
 f1
