@@ -39,12 +39,12 @@ The evaluate function receives the following input parameters:
 11. ref_yield_tags: reference passage for fine-grained evaluation. In other words, it enables us to do evaluation to edges of different types of labels (that are not part of the UCCA labels), such as subject, object and so on. Nevertheless, the recall, precision and f1 scores will still be calculated based on the UCCA parsing. 
 
 The function evaluate returns a Score object, which contains the recall, precision and f1 scores of the generated annotation.
-For example, by running https://github.com/lovodkin93/ucca/blob/master/ucca/tests/test_validation.py, the following line https://github.com/lovodkin93/ucca/blob/master/ucca/tests/test_evaluation.py#L331 generates a Score class. One of its elements is evaluators, which comprises of three EvaluatorResults classes:
+For example, by running https://github.com/lovodkin93/ucca/blob/master/ucca/tests/test_validation.py, the following line https://github.com/lovodkin93/ucca/blob/master/ucca/tests/test_evaluation.py#L331 generates a Score class. One of its elements is called evaluators, which comprises of three EvaluatorResults classes:
 - 'labeled'
 - 'unlabeled'
 - 'weak_labeled'
 
-Each of those EvaluatorResults class contain the results for 3 types of edges:
+Each of those EvaluatorResults classes contains the results for 3 types of edges:
 - primary
 - remote
 - impicit
