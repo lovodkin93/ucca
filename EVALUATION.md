@@ -47,7 +47,7 @@ Each of those EvaluatorResults class contain the results for 3 types of edges:
 - primary
 - remote
 - impicit
-The results for each such type of edges comprise of:
+\n The results for each such type of edges comprise of:
 errors
 f1
 num_guessed
