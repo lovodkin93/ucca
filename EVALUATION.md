@@ -1,5 +1,5 @@
-The evaluation process is done through the `evaluate` function that is located in the `evaluation.py` script (./ucca/evaluation.py).
-A wrapping script of the `evaluation.py` script is `evaluate_standard.py` (./scripts/evaluate_standard.py). For more details on how the scripts receives its argument, please write `evaluate_standard --help` in the prompt.
+The evaluation process is done through the `evaluate` function that is located in the `evaluation.py` script [evaluation.py](ucca/evaluation.py).
+A wrapping script of the `evaluation.py` script is `evaluate_standard.py` [evaluate_standard.py](scripts/evaluate_standard.py). For more details on how the scripts receives its argument, please write `evaluate_standard --help` in the prompt.
 The evaluation process compares the gold-standard annotation of a specific passage, with the calculated annotation of that same passage.
 Both passages are of `Passage` object type, which is an object that contains the connected graph that represents the annotation of the passage.
 The evaluation includes the recall, precision and F1 scores. The calculation of these scores is done by comparing each edge's labels and yield, which are the literals that are under the edge's child node (if we look at the annotation as a tree).
@@ -63,5 +63,5 @@ The results for each such type of edges comprise of:
 - r (recall)
 
 For more details on the `evaluate` function, please see the following links:
-https://ucca.readthedocs.io/en/latest/api/ucca.evaluation.evaluate.html#ucca.evaluation.evaluate
-https://ucca.readthedocs.io/en/latest/api/ucca.evaluation.Scores.html#ucca.evaluation.Scores
+[evaluate](https://ucca.readthedocs.io/en/latest/api/ucca.evaluation.evaluate.html#ucca.evaluation.evaluate)
+[Scores](https://ucca.readthedocs.io/en/latest/api/ucca.evaluation.Scores.html#ucca.evaluation.Scores)
