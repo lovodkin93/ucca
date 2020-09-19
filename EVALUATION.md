@@ -28,6 +28,7 @@ Other types of edges that can be included are:
     - predicate nouns
     - predicate adjectives
     - expletives
+
 If there is a need in doing the evaluation based on specific labels, a useful flag is `--constructions=categories` , which shows evaluation results per edge label (category).
 6. units: whether to evaluate common units
 7. fscore: whether to compute precision, recall and f1 score
