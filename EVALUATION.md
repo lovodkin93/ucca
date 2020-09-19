@@ -32,7 +32,7 @@ Other types of edges that can be included are:
 If there is a need in doing the evaluation based on specific labels, a useful flag is `--constructions=categories` , which shows evaluation results per edge label (category).
 6. units: whether to evaluate common units
 7. fscore: whether to compute precision, recall and f1 score
-8. errors: whether to print the mistakes (prints something similar to a confusion matrix). It is worth mentioning the `--as-table` option in the [evaluate_standard](https://github.com/lovodkin93/ucca/blob/master/scripts/evaluate_standard.py) script, that prints the confusion matrix as a table.
+8. errors: whether to print the mistakes (prints something similar to a confusion matrix). It is worth mentioning the `--as-table` option in the [evaluate_standard.py](scripts/evaluate_standard.py) script, that prints the confusion matrix as a table.
 9. normalize: flatten centers and move common functions to root before evaluation - modifies passages. There's an option to normalize the passages jointly. In order to normalize them seperately, it should be done before calling `evaluate`. 
 10. eval_type: specific evaluation type(s) to limit to. One can choose one of the following evaluation types:
     - labeled - in the process of evaluation, both the labels of the edges and their yields are compared.
@@ -41,7 +41,7 @@ If there is a need in doing the evaluation based on specific labels, a useful fl
 11. ref_yield_tags: reference passage for fine-grained evaluation. In other words, it enables us to do evaluation to edges of different types of labels (that are not part of the UCCA labels), such as subject, object and so on. Nevertheless, the recall, precision and f1 scores will still be calculated based on the UCCA parsing. 
 
 The function evaluate returns a `Score` object, which contains the recall, precision and f1 scores of the generated annotation.
-For example, by running [test_validation.py](ucca/tests/test_validation.py), the following line [Score](https://github.com/lovodkin93/ucca/blob/master/ucca/tests/test_evaluation.py#L331) generates a `Score` class. One of its elements is called `evaluators`, which comprises of three `EvaluatorResults` classes:
+For example, by running [test_validation.py](ucca/tests/test_validation.py), the line [Score](ucca/tests/test_evaluation.py#L331) generates a `Score` class. One of its elements is called `evaluators`, which comprises of three `EvaluatorResults` classes:
 - 'labeled'
 - 'unlabeled'
 - 'weak_labeled'
