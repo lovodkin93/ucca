@@ -17,17 +17,18 @@ The `evaluate` function receives the following input parameters:
     - conll (CoNLL-X dependency parsing shared task)
     - sdp (SemEval 2015 semantic dependency parsing shared task)
 4. verbose: whether to print the results
-5. constructions: names of construction types to include in the evaluation. By construction we mean that the evaluation can be done on specific types of edges, for example just on the Proccess and State edges. The default construction includes the following edges:
-    - primary edges
-    - remote edges
-    - implicit edges
+5. constructions: names of construction types to include in the evaluation. By construction we mean that the evaluation can be done on specific types of edges, for example just on the Proccess and State edges. If there is a need in doing the evaluation based on specific labels, a useful flag is `--constructions=categories` , which shows evaluation results per edge label (category).
+The default construction includes the following edges:
+    - primary edges (`--constructions=primary`)
+    - remote edges (`--constructions=remote`)
+    - implicit edges (`--constructions=implicit`)
 Other types of edges that can be included are:
-    - aspectual verbs
-    - light verbs
-    - multi-word expressions (mwe)
-    - predicate nouns
-    - predicate adjectives
-    - expletives
+    - aspectual verbs (`--constructions=aspectual_verbs`)
+    - light verbs (`--constructions=light_verbs`)
+    - multi-word expressions (mwe) (`--constructions=mwe`)
+    - predicate nouns (`--constructions=pred_nouns`)
+    - predicate adjectives (`--constructions=pred_adjs`)
+    - expletives (`--constructions=expletives`)
 
 If there is a need in doing the evaluation based on specific labels, a useful flag is `--constructions=categories` , which shows evaluation results per edge label (category).
 6. units: whether to evaluate common units
