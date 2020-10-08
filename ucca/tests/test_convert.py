@@ -21,7 +21,7 @@ def _test_terms(node, terms):
 
 
 def test_site_terminals():
-    elem = load_xml("../../test_files/site1.xml")
+    elem = load_xml("test_files/site1.xml")
     passage = convert.from_site(elem)
     terms = passage.layer(layer0.LAYER_ID).all
 
@@ -48,7 +48,7 @@ def test_site_terminals():
 
 
 def test_site_simple():
-    elem = load_xml("../../test_files/site2.xml")
+    elem = load_xml("test_files/site2.xml")
     passage = convert.from_site(elem)
     terms = passage.layer(layer0.LAYER_ID).all
     l1 = passage.layer("1")
@@ -79,7 +79,7 @@ def test_site_simple():
 
 
 def test_site_advanced():
-    elem = load_xml("../../test_files/site3.xml")
+    elem = load_xml("test_files/site3.xml")
     passage = convert.from_site(elem)
     terms = passage.layer(layer0.LAYER_ID).all
     l1 = passage.layer("1")
@@ -132,7 +132,7 @@ def test_site_advanced():
 
 
 def test_site_discontiguous_with_remote():
-    elem = load_xml("../../test_files/site4.xml")
+    elem = load_xml("test_files/site4.xml")
     passage = convert.from_site(elem)
     s1 = passage.layer(layer1.LAYER_ID).heads[0].state
     remote_a1 = [e.child for e in s1 if e.attrib.get("remote") and e.tag == layer1.EdgeTags.Participant]
@@ -143,7 +143,7 @@ def test_site_discontiguous_with_remote():
 
 
 def test_site_discontiguous_with_implicit():
-    elem = load_xml("../../test_files/site5.xml")
+    elem = load_xml("test_files/site5.xml")
     passage = convert.from_site(elem)
     s1 = passage.layer(layer1.LAYER_ID).heads[0].state
     remote_t1 = [e.child for e in s1 if e.child.attrib.get("implicit") and e.tag == layer1.EdgeTags.Time]
@@ -151,8 +151,8 @@ def test_site_discontiguous_with_implicit():
 
 
 def test_to_standard():
-    passage = convert.from_site(load_xml("../../test_files/site3.xml"))
-    ref = load_xml("../../test_files/standard3.xml")  # old format of xml
+    passage = convert.from_site(load_xml("test_files/site3.xml"))
+    ref = load_xml("test_files/standard3.xml")  # old format of xml
     new_ref = convert.to_standard(convert.from_standard(ref))   # converting to the new xml format
     root = convert.to_standard(passage)
     assert (textutil.indent_xml(ETree.tostring(new_ref)).splitlines() ==
@@ -161,7 +161,7 @@ def test_to_standard():
 
 def test_from_standard():
     passage = loaded()
-    ref = convert.from_site(load_xml("../../test_files/site3.xml"))
+    ref = convert.from_site(load_xml("test_files/site3.xml"))
     assert passage.equals(ref, ordered=True)
 
 
