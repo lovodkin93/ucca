@@ -74,7 +74,7 @@ def test_load_passage():
 
 def test_load_multiple_passages():
     """Test lazy-loading passages"""
-    files = 3 * ["test_files/standard3.xml"]
+    files = 3 * ["../../test_files/standard3.xml"]
     passages = ioutil.read_files_and_dirs(files)
     assert len(files) == len(list(passages)), "Should load one passage per file"
     assert len(files) == len(passages)

@@ -82,6 +82,16 @@ def forbid_child_of_G_fn():
     attach_terminals(terms, g1, h2)
     return p
 
+def forbid_child_of_H_fn():
+    p, l1, terms = create_passage(3, 3)
+    h1 = l1.add_fnode(None, layer1.EdgeTags.ParallelScene)
+    link1 = l1.add_fnode(h1, layer1.EdgeTags.Linker)
+    h2 = l1.add_fnode(h1, layer1.EdgeTags.ParallelScene)
+    s1 = l1.add_fnode(h2, layer1.EdgeTags.State)
+    a1 = l1.add_fnode(h2, layer1.EdgeTags.Participant)
+    attach_terminals(terms, link1, s1, a1)
+    return p
+
 def forbid_descendant_of_P_fn(): # same for state
     p, l1, terms = create_passage(5, 5)
     h1 = l1.add_fnode(None, layer1.EdgeTags.ParallelScene)
@@ -214,7 +224,20 @@ def forbid_remote():
     attach_terminals(terms, link1, a2, a1, p1, p2, r2, r1)
     return p
 
+def forbid_at_top_level():
+    p, l1, terms = create_passage(1, 1)
+    g1 = l1.add_fnode(None, layer1.EdgeTags.Ground)
+    attach_terminals(terms, g1)
+    return p
 
+def forbid_children_of_UNA_and_alone():
+    p, l1, terms = create_passage(1, 1)
+    h1 = l1.add_fnode(None, layer1.EdgeTags.ParallelScene)
+    u1 = l1.add_fnode(h1, layer1.EdgeTags.Unanalyzable)
+    s1 = l1.add_fnode(u1, layer1.EdgeTags.State)
+    a1 = l1.add_fnode(u1, layer1.EdgeTags.Participant)
+    attach_terminals(terms)
+    return p
 
 
 @pytest.mark.parametrize("create, valid", (
@@ -229,24 +252,27 @@ def forbid_remote():
         (binary_punct, True),
         (unary_punct_under_fn, False),
         (punct_under_unanalyzable_fn, True),
-        (forbid_child_of_P_fn, True),
-        (forbid_child_of_F_fn, True),
-        (forbid_child_of_S_fn, True),
-        (forbid_child_of_G_fn, True),
-        (forbid_descendant_of_P_fn, True),
-        (forbid_sibling_of_L_H_fn, True),
-        (forbid_sibling_of_S_fn, True),
-        (forbid_sibling_of_D_fn, True),
-        (forbid_sibling_of_P_N_fn, True),
-        (forbid_sibling_of_Q_fn, True),
-        (forbid_sibling_of_E_fn, True),
-        (forbid_sibling_of_C_fn, True),
-        (forbid_sibling_of_A_T_fn, True),
-        (require_sibling_of_E_Q_N, True),
-        (require_sibling_of_L, True),
-        (require_sibling_of_A_T, True),
-        (unique_under_parent, True),
-        (forbid_remote, True),
+        (forbid_child_of_P_fn, False),
+        (forbid_child_of_F_fn, False),
+        (forbid_child_of_S_fn, False),
+        (forbid_child_of_G_fn, False),
+        (forbid_child_of_H_fn, False),
+        (forbid_descendant_of_P_fn, False),
+        (forbid_sibling_of_L_H_fn, False),
+        (forbid_sibling_of_S_fn, False),
+        (forbid_sibling_of_D_fn, False),
+        (forbid_sibling_of_P_N_fn, False),
+        (forbid_sibling_of_Q_fn, False),
+        (forbid_sibling_of_E_fn, False),
+        (forbid_sibling_of_C_fn, False),
+        (forbid_sibling_of_A_T_fn, False),
+        (require_sibling_of_E_Q_N, False),
+        (require_sibling_of_L, False),
+        (require_sibling_of_A_T, False),
+        (unique_under_parent, False),
+        (forbid_remote, False),
+        (forbid_at_top_level, False),
+        (forbid_children_of_UNA_and_alone, False),
 ))
 def test_evaluate_self(create, valid):
     p = create()

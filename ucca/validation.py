@@ -112,7 +112,7 @@ class NodeValidator:
             if len(s) > 1:
                 yield "Unit (%s) with multiple %s children (%s)" % (self.node_id, tag, join(e.child for e in s))
         if ETags.Function in self.incoming:
-            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC))) #old version: #s = self.outgoing_tags.difference((ETags.Terminal, ETags.Punctuation))
+            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC)))
             if s:
                 yield "%s unit (%s) with %s children: %s" % (ETags.Function, self.node_id, join(s), self.node)
         if ETags.Linker in self.incoming_tags and linkage and ETags.LinkRelation not in self.incoming_tags:
@@ -214,6 +214,15 @@ class NodeValidator:
                          e.attrib.get('remote') and e.tag in {ETags.Relator, ETags.Function}]
             if s:
                 yield "%s remote edges (%s)" % (join({e.tag for e in s}), join(s))
+        if not self.incoming:
+            s = self.outgoing_tags.difference(set.union({ETags.ParallelScene, ETags.Linker, ETags.Function, ETags.Punctuation}, LINKAGE))
+            if s:
+                yield "%s unit (%s) at top level" % (join(s), self.node_id)
+        if ETags.Unanalyzable in self.incoming_tags:
+            s = [e for e in self.node.incoming if ETags.Unanalyzable in e.tags and len(set(e.tags))==1]
+            if s:
+                yield "%s unit (%s) without another label" % (ETags.Unanalyzable, self.node_id)
+
 
 
     def validate_linkage(self):
