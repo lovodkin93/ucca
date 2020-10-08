@@ -7,9 +7,9 @@ from ucca.layer0 import NodeTags as L0Tags
 from ucca.layer1 import EdgeTags as ETags, NodeTags as L1Tags
 
 LINKAGE = {ETags.LinkArgument, ETags.LinkRelation}
-NON_SCENE = {ETags.Center, ETags.Elaborator, ETags.Quantifier, ETags.Connector} # FIXME: AVIV SLOBODKIN: added this too
-SUPP_FUNC = {ETags.Relator, ETags.Function, ETags.Unanalyzable, ETags.Uncertain} # FIXME: AVIV SLOBODKIN: added this too
-SCENE = {ETags.Participant, ETags.State, ETags.Process, ETags.Adverbial, ETags.Time} # FIXME: AVIV SLOBODKIN: added this too (Missing CMR)
+NON_SCENE = {ETags.Center, ETags.Elaborator, ETags.Quantifier, ETags.Connector}
+SUPP_FUNC = {ETags.Relator, ETags.Function, ETags.Unanalyzable, ETags.Uncertain}
+SCENE = {ETags.Participant, ETags.State, ETags.Process, ETags.Adverbial, ETags.Time}
 
 def validate(passage, linkage=True, multigraph=False):
     for node in passage.layer(layer0.LAYER_ID).all:
@@ -63,7 +63,6 @@ class NodeValidator:
             yield "Orphan %s terminal (%s) '%s'" % (self.node.tag, self.node_id, self.node)
         elif len(self.node.incoming) > 1:
             yield "Reentrant %s terminal (%s) '%s'" % (self.node.tag, join(self.node.incoming), self.node)
-        # FIXME: AVIV SLOBODKIN: update from here
 
     def validate_top_level(self):
         if self.node not in self.node.layer.heads and self.node.tag != L1Tags.Linkage:
@@ -76,7 +75,6 @@ class NodeValidator:
         if s:
             yield "Top-level unit (%s) with %s children: %s" %\
                   (self.node_id, join(s), join(e.child for e in self.node if s.intersection(e.tags)))
-        # FIXME: AVIV SLOBODKIN: update from here
 
     def validate_non_terminal(self, linkage=False, multigraph=False):
         if linkage and self.node.tag == L1Tags.Linkage:
@@ -114,7 +112,7 @@ class NodeValidator:
             if len(s) > 1:
                 yield "Unit (%s) with multiple %s children (%s)" % (self.node_id, tag, join(e.child for e in s))
         if ETags.Function in self.incoming:
-            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC))) #FIXME: missing CMR. Also, updated this one. Old version: #s = self.outgoing_tags.difference((ETags.Terminal, ETags.Punctuation))
+            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC))) #old version: #s = self.outgoing_tags.difference((ETags.Terminal, ETags.Punctuation))
             if s:
                 yield "%s unit (%s) with %s children: %s" % (ETags.Function, self.node_id, join(s), self.node)
         if ETags.Linker in self.incoming_tags and linkage and ETags.LinkRelation not in self.incoming_tags:
@@ -126,11 +124,10 @@ class NodeValidator:
                 if len(edges) > 1:
                     yield "Multiple edges from %s to %s: %s" % (self.node_id, child_id, ", ".join(
                         "%d %s" % (len(e), t) for t, e in tag_to_edge(edges).items()))
-        # FIXME: AVIV SLOBODKIN: update from here
         no_sub_non_scene = (ETags.Process, ETags.Adverbial, ETags.Linker, ETags.Time,
                             ETags.Quantifier, ETags.Connector, ETags.State)
         if any(k in self.incoming for k in no_sub_non_scene):
-            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC))) #FIXME: missing CMR
+            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC)))
             edges_to_check =  [k for k in self.incoming if k in no_sub_non_scene]
             if s:
                 yield "%s unit (%s) with %s children: %s" % (join(edges_to_check), self.node_id, join(s), self.node)
@@ -157,7 +154,7 @@ class NodeValidator:
                 yield "%s unit with %s siblings: under %s" % (ETags.Adverbial, join(s), self.node)
         if ETags.Center in self.outgoing_tags:
             s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, {ETags.Adverbial},
-                                                         NON_SCENE, SUPP_FUNC))) #FIXME: missing CMR
+                                                         NON_SCENE, SUPP_FUNC)))
             if s:
                 yield "%s unit with %s siblings: under %s" % (ETags.Center, join(s), self.node)
         if any(k in self.outgoing_tags for k in (ETags.Time, ETags.Participant)):
@@ -227,7 +224,6 @@ class NodeValidator:
             yield "%s unit (%s) with %s children" % (self.node.tag, self.node_id, join(s))
         if ETags.LinkRelation not in self.outgoing:
             yield "%s unit without %s child" % (self.node.tag, ETags.LinkRelation)
-        # FIXME: AVIV SLOBODKIN: update from here
 
     def validate_foundational(self):
         if self.node.participants and not self.node.is_scene():
@@ -244,7 +240,6 @@ class NodeValidator:
         if s:
             yield "Non-linkage unit (%s) with %s children: %s" %\
                   (self.node_id, join(s), join(e.child for e in self.node if s.intersection(e.tags)))
-        # FIXME: AVIV SLOBODKIN: update from here
 
 
 
