@@ -309,17 +309,17 @@ def test_evaluate_self(create, units, errors, normalize):
                                                          (UNLABELED, PRIMARY): 1, (UNLABELED, REMOTE): 1, (UNLABELED, IMPLICIT): 0,
                                                          (WEAK_LABELED, PRIMARY): 0.8, (WEAK_LABELED, REMOTE): 0, (WEAK_LABELED, IMPLICIT): 0}),
                                  tuple(partial(convert.from_standard, load_xml(
-                                     os.path.join("test_files", "%s.xml" % f))) for f in ("120_parsed", "standard3")) +
+                                     os.path.join("../../test_files", "%s.xml" % f))) for f in ("120_parsed", "standard3")) +
                                  ({(LABELED, PRIMARY): 3/14, (LABELED, REMOTE): 0, (LABELED, IMPLICIT): 0,
                                    (UNLABELED, PRIMARY): 0.5, (UNLABELED, REMOTE): 0, (UNLABELED, IMPLICIT): 0,
                                    (WEAK_LABELED, PRIMARY): 3/14, (WEAK_LABELED, REMOTE): 0, (WEAK_LABELED, IMPLICIT): 0},),
                                  tuple(partial(convert.from_standard, load_xml(
-                                     os.path.join("test_files", "%s.xml" % f))) for f in ("implicit1", "implicit1_ref")) +
+                                     os.path.join("../../test_files", "%s.xml" % f))) for f in ("implicit1", "implicit1_ref")) +
                                  ({(LABELED, PRIMARY): 1, (LABELED, REMOTE): 1, (LABELED, IMPLICIT): 2/3,
                                    (UNLABELED, PRIMARY): 1, (UNLABELED, REMOTE): 1, (UNLABELED, IMPLICIT): 2/3,
                                    (WEAK_LABELED, PRIMARY): 1, (WEAK_LABELED, REMOTE): 1, (WEAK_LABELED, IMPLICIT): 2/3},),
                                  tuple(partial(convert.from_standard, load_xml(
-                                     os.path.join("test_files", "%s.xml" % f))) for f in ("implicit2", "implicit2_ref")) +
+                                     os.path.join("../../test_files", "%s.xml" % f))) for f in ("implicit2", "implicit2_ref")) +
                                  ({(LABELED, PRIMARY): 2/(11/5+13/5), (LABELED, REMOTE): 0, (LABELED, IMPLICIT): 0,
                                    (UNLABELED, PRIMARY): 2/(1+13/11), (UNLABELED, REMOTE): 0, (UNLABELED, IMPLICIT): 0,
                                    (WEAK_LABELED, PRIMARY): 0.5, (WEAK_LABELED, REMOTE): 0, (WEAK_LABELED, IMPLICIT): 0},),

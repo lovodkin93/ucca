@@ -7,7 +7,9 @@ from ucca.layer0 import NodeTags as L0Tags
 from ucca.layer1 import EdgeTags as ETags, NodeTags as L1Tags
 
 LINKAGE = {ETags.LinkArgument, ETags.LinkRelation}
-
+NON_SCENE = {ETags.Center, ETags.Elaborator, ETags.Quantifier, ETags.Connector} # FIXME: AVIV SLOBODKIN: added this too
+SUPP_FUNC = {ETags.Relator, ETags.Function, ETags.Unanalyzable, ETags.Uncertain} # FIXME: AVIV SLOBODKIN: added this too
+SCENE = {ETags.Participant, ETags.State, ETags.Process, ETags.Adverbial, ETags.Time} # FIXME: AVIV SLOBODKIN: added this too (Missing CMR)
 
 def validate(passage, linkage=True, multigraph=False):
     for node in passage.layer(layer0.LAYER_ID).all:
@@ -61,6 +63,7 @@ class NodeValidator:
             yield "Orphan %s terminal (%s) '%s'" % (self.node.tag, self.node_id, self.node)
         elif len(self.node.incoming) > 1:
             yield "Reentrant %s terminal (%s) '%s'" % (self.node.tag, join(self.node.incoming), self.node)
+        # FIXME: AVIV SLOBODKIN: update from here
 
     def validate_top_level(self):
         if self.node not in self.node.layer.heads and self.node.tag != L1Tags.Linkage:
@@ -73,6 +76,7 @@ class NodeValidator:
         if s:
             yield "Top-level unit (%s) with %s children: %s" %\
                   (self.node_id, join(s), join(e.child for e in self.node if s.intersection(e.tags)))
+        # FIXME: AVIV SLOBODKIN: update from here
 
     def validate_non_terminal(self, linkage=False, multigraph=False):
         if linkage and self.node.tag == L1Tags.Linkage:
@@ -110,7 +114,7 @@ class NodeValidator:
             if len(s) > 1:
                 yield "Unit (%s) with multiple %s children (%s)" % (self.node_id, tag, join(e.child for e in s))
         if ETags.Function in self.incoming:
-            s = self.outgoing_tags.difference((ETags.Terminal, ETags.Punctuation))
+            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC))) #FIXME: missing CMR. Also, updated this one. Old version: #s = self.outgoing_tags.difference((ETags.Terminal, ETags.Punctuation))
             if s:
                 yield "%s unit (%s) with %s children: %s" % (ETags.Function, self.node_id, join(s), self.node)
         if ETags.Linker in self.incoming_tags and linkage and ETags.LinkRelation not in self.incoming_tags:
@@ -122,6 +126,98 @@ class NodeValidator:
                 if len(edges) > 1:
                     yield "Multiple edges from %s to %s: %s" % (self.node_id, child_id, ", ".join(
                         "%d %s" % (len(e), t) for t, e in tag_to_edge(edges).items()))
+        # FIXME: AVIV SLOBODKIN: update from here
+        no_sub_non_scene = (ETags.Process, ETags.Adverbial, ETags.Linker, ETags.Time,
+                            ETags.Quantifier, ETags.Connector, ETags.State)
+        if any(k in self.incoming for k in no_sub_non_scene):
+            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC))) #FIXME: missing CMR
+            edges_to_check =  [k for k in self.incoming if k in no_sub_non_scene]
+            if s:
+                yield "%s unit (%s) with %s children: %s" % (join(edges_to_check), self.node_id, join(s), self.node)
+        if ETags.Unanalyzable in self.incoming:
+            if self.outgoing:
+                yield "%s unit (%s) with children: %s" % (ETags.Unanalyzable, self.node_id, self.node) # FIXME: should include punctuation and terminal?
+        if ETags.Ground in self.incoming:
+            s = {k for k in {ETags.ParallelScene, ETags.Linker, ETags.Ground} if k in self.outgoing_tags}
+            if s:
+                yield "%s unit (%s) with %s children: %s" % (ETags.Ground, self.node_id, join(s), self.node)
+        if ETags.ParallelScene in self.incoming:
+            s = {k for k in {ETags.ParallelScene, ETags.Linker} if k in self.outgoing_tags}
+            if s:
+                yield "%s unit (%s) with %s children: %s" % (ETags.ParallelScene, self.node_id, join(s), self.node)
+        if ETags.State in self.outgoing_tags:
+            forbidden = {ETags.ParallelScene, ETags.Linker, ETags.Process, ETags.Center, ETags.Elaborator,
+                         ETags.Quantifier, ETags.Connector}
+            s = {k for k in forbidden if k in self.outgoing_tags}
+            if s:
+                yield "%s unit with %s siblings: under %s" % (ETags.State, join(s), self.node)
+        if ETags.Adverbial in self.outgoing_tags:
+            s = {k for k in {ETags.ParallelScene, ETags.Linker} if k in self.outgoing_tags}
+            if s:
+                yield "%s unit with %s siblings: under %s" % (ETags.Adverbial, join(s), self.node)
+        if ETags.Center in self.outgoing_tags:
+            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, {ETags.Adverbial},
+                                                         NON_SCENE, SUPP_FUNC))) #FIXME: missing CMR
+            if s:
+                yield "%s unit with %s siblings: under %s" % (ETags.Center, join(s), self.node)
+        if any(k in self.outgoing_tags for k in (ETags.Time, ETags.Participant)):
+            forbidden = set.union(NON_SCENE, ETags.ParallelScene, ETags.Linker)
+            s = {k for k in forbidden if k in self.outgoing_tags}
+            edges_to_check = [k for k in self.outgoing_tags if k in (ETags.Time, ETags.Participant)]
+            if s:
+                yield "%s unit with %s siblings: under %s" % (join(edges_to_check), join(s), self.node)
+        if any(k in self.outgoing_tags for k in (ETags.ParallelScene, ETags.Linker)):
+            forbidden = set.union(NON_SCENE, SCENE)
+            s = {k for k in forbidden if k in self.outgoing_tags}
+            edges_to_check = [k for k in self.outgoing_tags if k in (ETags.ParallelScene, ETags.Linker)]
+            if s:
+                yield "%s unit with %s siblings: under %s" % (join(edges_to_check), join(s), self.node)
+        if ETags.Elaborator in self.outgoing_tags:
+            forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground, ETags.Connector)
+            s = {k for k in forbidden if k in self.outgoing_tags}
+            if s:
+                yield "%s unit with %s siblings: under %s" % (ETags.Elaborator, join(s), self.node)
+        if ETags.Quantifier in self.outgoing_tags:
+            forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground)
+            s = {k for k in forbidden if k in self.outgoing_tags}
+            if s:
+                yield "%s unit with %s siblings: under %s" % (ETags.Quantifier, join(s), self.node)
+        if ETags.Connector in self.outgoing_tags:
+            forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground, ETags.Elaborator, ETags.Quantifier)
+            s = {k for k in forbidden if k in self.outgoing_tags}
+            if s:
+                yield "%s unit with %s siblings: under %s" % (ETags.Connector, join(s), self.node)
+        if ETags.Process in self.outgoing_tags:
+            forbidden = set.union(NON_SCENE, ETags.State)
+            s = {k for k in forbidden if k in self.outgoing_tags}
+            if s:
+                yield "%s unit with %s siblings: under %s" % (ETags.Process, join(s), self.node)
+        if any(k in self.outgoing_tags for k in (ETags.Elaborator, ETags.Quantifier, ETags.Connector)):
+            edges_to_check = [k for k in self.outgoing_tags if k in (ETags.Elaborator, ETags.Quantifier, ETags.Connector)]
+            if ETags.Center not in self.outgoing_tags:
+                yield "%s unit without %s sibling: under %s" % (join(edges_to_check), ETags.Center, self.node)
+        if any(k in self.outgoing_tags for k in (ETags.Time, ETags.Participant)):
+            edges_to_check = [k for k in self.outgoing_tags if k in (ETags.Time, ETags.Participant)]
+            required = {ETags.State, ETags.Process}
+            if ETags.State not in self.outgoing_tags and ETags.Process not in self.outgoing_tags:
+                yield "%s unit without %s siblings: under %s" % (join(edges_to_check), join(required), self.node)
+        if ETags.Linker in self.outgoing_tags:
+            if ETags.ParallelScene not in self.outgoing_tags:
+                yield "%s unit without %s sibling: under %s" % (ETags.Linker, ETags.ParallelScene, self.node)
+        if any(k in self.incoming_tags for k in (ETags.State, ETags.Process)):
+            edges_to_check = [k for k in self.incoming_tags if k in (ETags.State, ETags.Process)]
+            forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground)
+            itr = self.node.iter()
+            for i in itr:
+                if not isinstance(i, layer0.Terminal):
+                    if i.parallel_scenes or i.linkers or i.grounds or i.participants or i.state or i.process or i.adverbials or i.times:
+                        yield "%s unit (%s) with at least one of the %s descendants: %s" % (join(edges_to_check), self.node_id, join(forbidden), self.node)
+        if ETags.Relator in self.incoming_tags or ETags.Function in self.incoming_tags:
+            s = [e for e in self.node.incoming if
+                         e.attrib.get('remote') and e.tag in {ETags.Relator, ETags.Function}]
+            if s:
+                yield "%s remote edges (%s)" % (join({e.tag for e in s}), join(s))
+
 
     def validate_linkage(self):
         if self.node.incoming:
@@ -131,6 +227,7 @@ class NodeValidator:
             yield "%s unit (%s) with %s children" % (self.node.tag, self.node_id, join(s))
         if ETags.LinkRelation not in self.outgoing:
             yield "%s unit without %s child" % (self.node.tag, ETags.LinkRelation)
+        # FIXME: AVIV SLOBODKIN: update from here
 
     def validate_foundational(self):
         if self.node.participants and not self.node.is_scene():
@@ -147,6 +244,8 @@ class NodeValidator:
         if s:
             yield "Non-linkage unit (%s) with %s children: %s" %\
                   (self.node_id, join(s), join(e.child for e in self.node if s.intersection(e.tags)))
+        # FIXME: AVIV SLOBODKIN: update from here
+
 
 
 def tag_to_edge(edges):
