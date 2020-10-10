@@ -97,10 +97,9 @@ def l1_passage():
     a1.add(layer1.EdgeTags.Terminal, terms[8])
     l1.add_punct(ps1, terms[9])
 
-    # Scene #23: [[11 12 13 14 15 H] [16 L] [17 18 19 H] H]
     # Scene #2: [[11 12 13 14 P] [15 D]]
-    ps23 = l1.add_fnode(None, layer1.EdgeTags.ParallelScene)
-    ps2 = l1.add_fnode(ps23, layer1.EdgeTags.ParallelScene)
+    #ps12 = l1.add_fnode(None, layer1.EdgeTags.ParallelScene)
+    ps2 = l1.add_fnode(None, layer1.EdgeTags.ParallelScene)
     a2 = l1.add_fnode(ps2, layer1.EdgeTags.Participant)
     a2.add(layer1.EdgeTags.Terminal, terms[10])
     a2.add(layer1.EdgeTags.Terminal, terms[11])
@@ -110,11 +109,11 @@ def l1_passage():
     d2.add(layer1.EdgeTags.Terminal, terms[14])
 
     # Linker #2: [16 L]
-    link2 = l1.add_fnode(ps23, layer1.EdgeTags.Linker)
+    link2 = l1.add_fnode(None, layer1.EdgeTags.Linker)
     link2.add(layer1.EdgeTags.Terminal, terms[15])
 
     # Scene #3: [[16 17 S] [18 A] (implicit participant) H]
-    ps3 = l1.add_fnode(ps23, layer1.EdgeTags.ParallelScene)
+    ps3 = l1.add_fnode(None, layer1.EdgeTags.ParallelScene)
     p3 = l1.add_fnode(ps3, layer1.EdgeTags.State)
     p3.add(layer1.EdgeTags.Terminal, terms[16])
     p3.add(layer1.EdgeTags.Terminal, terms[17])
@@ -264,7 +263,7 @@ def discontiguous():
     # The dashed edge tags (e.g. -C, C-) mean discontiguous units
     # [PS [D [E 0] [C- 1] [E 2] [-C 3]]
     #     [A- 4] [P- 5 6] [-A 7] [F 8] [-P [U 9]]]
-    # In addition, D takes P as a remote G
+    # In addition, D used to take P as a remote G but is illegal so was removed
     ps1 = l1.add_fnode(None, layer1.EdgeTags.ParallelScene)
     d1 = l1.add_fnode(ps1, layer1.EdgeTags.Adverbial)
     e1 = l1.add_fnode(d1, layer1.EdgeTags.Elaborator)
@@ -273,7 +272,6 @@ def discontiguous():
     a1 = l1.add_fnode(ps1, layer1.EdgeTags.Participant)
     p1 = l1.add_fnode(ps1, layer1.EdgeTags.Process)
     f1 = l1.add_fnode(ps1, layer1.EdgeTags.Function)
-    l1.add_remote(d1, layer1.EdgeTags.Ground, p1)
     e1.add(layer1.EdgeTags.Terminal, terms[0])
     c1.add(layer1.EdgeTags.Terminal, terms[1])
     e2.add(layer1.EdgeTags.Terminal, terms[2])
@@ -314,11 +312,11 @@ def discontiguous():
 
 
 def loaded():
-    return convert.from_standard(load_xml("test_files/standard3.xml"))
+    return convert.from_standard(load_xml("../../test_files/standard3.xml"))
 
 
 def loaded_valid():
-    return convert.from_standard(load_xml("test_files/standard3_valid.xml"))
+    return convert.from_standard(load_xml("../../test_files/standard3_valid.xml"))
 
 
 def load_xml(path):

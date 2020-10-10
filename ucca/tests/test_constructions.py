@@ -29,9 +29,9 @@ def extract_and_check(p, constructions=None, expected=None):
                         'mwe': 2, 'H': 5, 'implicit': 1}),
         (multi_sent, {'U': 4, 'P': 3, 'mwe': 2, 'H': 3, 'primary': 6}),
         (crossing, {'U': 3, 'P': 2, 'remote': 1, 'mwe': 1, 'H': 2, 'primary': 3}),
-        (discontiguous, {'G': 2, 'U': 2, 'remote': 1, 'E': 2, 'primary': 13, 'P': 3, 'F': 1, 'C': 1, 'A': 3, 'D': 2,
+        (discontiguous, {'G': 1, 'U': 2, 'E': 2, 'primary': 13, 'P': 3, 'F': 1, 'C': 1, 'A': 3, 'D': 2,
                          'mwe': 6, 'H': 3, 'implicit':3}),
-        (l1_passage, {'P': 2, 'mwe': 4, 'H': 4, 'primary': 12, 'U': 2, 'A': 5, 'D': 1, 'L': 2, 'remote': 2, 'S': 1,
+        (l1_passage, {'P': 2, 'mwe': 4, 'H': 3, 'primary': 11, 'U': 2, 'A': 5, 'D': 1, 'L': 2, 'remote': 2, 'S': 1,
                       'implicit':1}),
         (empty, {}),
 ))
