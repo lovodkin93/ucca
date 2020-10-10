@@ -24,15 +24,16 @@ def extract_and_check(p, constructions=None, expected=None):
 
 @pytest.mark.parametrize("create, expected", (
         (loaded, {'P': 1, 'remote': 1, 'E': 3, 'primary': 15, 'U': 2, 'F': 1, 'C': 3, 'A': 1, 'D': 1, 'L': 2, 'mwe': 2,
-                  'H': 5, 'implicit': 1}),
+                  'H': 5, 'implicit': 1, 'main_rel': 1}),
         (loaded_valid, {'P': 1, 'remote': 1, 'E': 3, 'primary': 15, 'U': 2, 'F': 1, 'C': 3, 'A': 1, 'D': 1, 'L': 2,
-                        'mwe': 2, 'H': 5, 'implicit': 1}),
-        (multi_sent, {'U': 4, 'P': 3, 'mwe': 2, 'H': 3, 'primary': 6}),
-        (crossing, {'U': 3, 'P': 2, 'remote': 1, 'mwe': 1, 'H': 2, 'primary': 3}),
+                        'mwe': 2, 'H': 5, 'implicit': 1, 'main_rel': 1}),
+        (multi_sent, {'U': 4, 'P': 3, 'mwe': 2, 'H': 3, 'primary': 6, 'main_rel': 2}),
+        (crossing, {'U': 3, 'P': 2, 'remote': 1, 'mwe': 1, 'H': 2, 'primary': 3, 'main_rel': 2}),
         (discontiguous, {'G': 1, 'U': 2, 'E': 2, 'primary': 13, 'P': 3, 'F': 1, 'C': 1, 'A': 3, 'D': 2,
-                         'mwe': 6, 'H': 3, 'implicit':3}),
+                         'mwe': 6, 'H': 3, 'implicit':3, 'main_rel': 2}),
         (l1_passage, {'P': 2, 'mwe': 4, 'H': 3, 'primary': 11, 'U': 2, 'A': 5, 'D': 1, 'L': 2, 'remote': 2, 'S': 1,
-                      'implicit':1}),
+                      'implicit':1, 'main_rel': 3}),
+
         (empty, {}),
 ))
 def test_extract_all(create, expected):

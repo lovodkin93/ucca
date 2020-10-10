@@ -101,10 +101,10 @@ class Evaluator:
                 intersection = set.intersection(*tags)
                 if intersection:  # non-empty intersection
                     mutual_tags[y] = intersection
-        if counter is not None:
-            for y in m1.keys() | m2.keys():
+        if counter is not None:  # for confusion matrix / error counter
+            for y in m1.keys() | m2.keys():  # common yields (keys), but perhaps different tags (values)
                 tags = [sorted(set(t for c in m.get(y, ()) if not c.is_unary_child for t in c.edge.tags))
-                        for m in (m1, m2)]
+                        for m in (m1, m2)]  # the tags for the yield in each of the two passages
                 counter[tuple("|".join(t) or "<UNMATCHED>" for t in tags)] += 1
 
     def get_scores(self, p1, p2, eval_type, r=None):
