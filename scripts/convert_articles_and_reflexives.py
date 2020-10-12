@@ -26,6 +26,11 @@ def change_article_to_function(terminal, parent, lang):
     if terminal.text.lower() in ARTICLES[lang]:
         for edge in parent.incoming:
             if not edge.attrib.get("remote"):
+                # First, remove Functions to avoid duplicates
+                if len(edge.categories) > 1:
+                    edge.categories = [category for category in edge.categories
+                                       if category.tag != layer1.EdgeTags.Function]
+                # Then replace Elaborators to Functions
                 for category in edge.categories:
                     if category.tag == layer1.EdgeTags.Elaborator:
                         category.tag = layer1.EdgeTags.Function

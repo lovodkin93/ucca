@@ -1,7 +1,7 @@
 Universal Conceptual Cognitive Annotation
 ============================
 UCCA is a linguistic framework for semantic annotation, whose details
-are available at [the following paper](http://www.cs.huji.ac.il/~oabend/papers/ucca_acl.pdf):
+are available at [the following paper](http://aclweb.org/anthology/P13-1023):
 
     @inproceedings{abend2013universal,
       author={Abend, Omri  and  Rappoport, Ari},
@@ -21,7 +21,7 @@ and `convert` modules under the `ucca` package).
 
 The `scripts` package contains various utilities for processing passage files.
 
-To parse text to UCCA graphs, use [TUPA, the UCCA parser](http://www.cs.huji.ac.il/~danielh/tupa).
+To parse text to UCCA graphs, use [TUPA, the UCCA parser](https://github.com/danielhers/tupa).
 
 
 Authors

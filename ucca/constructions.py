@@ -176,6 +176,7 @@ CONSTRUCTIONS = (
     Construction("mwe", "Multi-word expressions",
                  lambda c: c.is_primary() and c.edge.child.tag == NodeTags.Foundational and len(
                      c.edge.child.terminals) > 1),  # Unanalyzable unit
+    Construction("main_rel", "Main relations (predicates)", Candidate.is_predicate),
     Construction("pred_nouns", "Predicate nouns",
                  lambda c: "ADJ" not in c.pos and "NOUN" in c.pos and c.is_predicate()),
     Construction("pred_adjs", "Predicate adjectives",
