@@ -312,11 +312,11 @@ def discontiguous():
 
 
 def loaded():
-    return convert.from_standard(load_xml("../../test_files/standard3.xml"))
+    return convert.from_standard(load_xml("test_files/standard3.xml"))
 
 
 def loaded_valid():
-    return convert.from_standard(load_xml("../../test_files/standard3_valid.xml"))
+    return convert.from_standard(load_xml("test_files/standard3_valid.xml"))
 
 
 def load_xml(path):
