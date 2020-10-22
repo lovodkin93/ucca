@@ -40,7 +40,7 @@ class TaskDownloader(ServerAccessor):
         user_id = task["user"]["id"]
         passage = None
         try:
-            passage = next(iter(from_json(task, by_external_id=by_external_id)))
+            passage = next(iter([from_json(task, by_external_id=by_external_id)]))
         except ValueError as e:
             if strict:
                 raise ValueError("Failed reading json for task %s:\n%s" % (task_id, json.dumps(task))) from e
