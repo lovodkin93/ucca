@@ -40,8 +40,6 @@ class TaskDownloader(ServerAccessor):
         user_id = task["user"]["id"]
         passage = None
         try:
-            a = from_json(task, by_external_id=by_external_id)
-            b = list(a)[0]
             passage = next(from_json(task, by_external_id=by_external_id))
         except ValueError as e:
             if strict:
