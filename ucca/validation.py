@@ -102,7 +102,7 @@ class NodeValidator:
         elif self.node.tag in (L1Tags.Foundational, L1Tags.Linkage, L1Tags.Punctuation) and \
                 all(e.attrib.get("remote") for e in self.node):
             yield "Non-implicit unit (%s) with no primary children" % (self.node_id)
-        for tag in (ETags.Function, ETags.ParallelScene, ETags.Linker, ETags.LinkRelation,
+        for tag in (ETags.Function, ETags.LinkRelation,
                     ETags.Connector, ETags.Punctuation, ETags.Terminal):
             s = self.incoming.get(tag, ())
             if len(s) > 1:
