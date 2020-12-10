@@ -6,7 +6,8 @@ from tqdm import tqdm
 
 from uccaapp.api import ServerAccessor
 
-desc = """Convert a passage file to JSON format and upload to UCCA-App as a completed task"""
+desc = """Create new annotation/review tasks for a specific user, given parent tokenization tasks (for creating 
+annotation tasks) or parent annotation tasks (for creating review tasks) """
 
 
 class AnnotationTaskCreator(ServerAccessor):

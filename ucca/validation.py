@@ -207,8 +207,6 @@ class NodeValidator:
         if (ETags.Unanalyzable in self.incoming_tags) and s:
             yield "%s unit (%s) without another label" % (ETags.Unanalyzable, self.node_id)
 
-
-
     def validate_linkage(self):
         if self.node.incoming:
             yield "Non-root %s unit (%s)" % (self.node.tag, self.node_id)
