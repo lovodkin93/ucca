@@ -111,10 +111,9 @@ class NodeValidator:
             s = self.outgoing.get(tag, ())
             if len(s) > 1:
                 yield "Unit (%s) with multiple %s children (%s)" % (self.node_id, tag, join(e.child for e in s))
-        if ETags.Function in self.incoming:
-            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC)))
-            if s:
-                yield "%s unit (%s) with %s children: %s" % (ETags.Function, self.node_id, join(s), self.node)
+        s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC)))
+        if (ETags.Function in self.incoming) and s:
+            yield "%s unit (%s) with %s children: %s" % (ETags.Function, self.node_id, join(s), self.node)
         if ETags.Linker in self.incoming_tags and linkage and ETags.LinkRelation not in self.incoming_tags:
             yield "%s unit (%s) with no incoming %s" % (ETags.Linker, self.node_id, ETags.LinkRelation)
         if not multigraph:
@@ -124,71 +123,59 @@ class NodeValidator:
                 if len(edges) > 1:
                     yield "Multiple edges from %s to %s: %s" % (self.node_id, child_id, ", ".join(
                         "%d %s" % (len(e), t) for t, e in tag_to_edge(edges).items()))
-        no_sub_non_scene = (ETags.Process, ETags.Adverbial, ETags.Linker, ETags.Time,
-                            ETags.Quantifier, ETags.Connector, ETags.State)
-        if any(self.incoming_tags.intersection(no_sub_non_scene)):
-            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC)))
+        no_sub_non_scene = (ETags.Process, ETags.Adverbial, ETags.Linker, ETags.Time, ETags.Quantifier,
+                            ETags.Connector, ETags.State)
+        s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC)))
+        if any(self.incoming_tags.intersection(no_sub_non_scene)) and s:
             edges_to_check =  self.incoming_tags.intersection(no_sub_non_scene)
-            if s:
-                yield "%s unit (%s) with %s children: %s" % (join(edges_to_check), self.node_id, join(s), self.node)
-        if ETags.Unanalyzable in self.incoming:
-            if self.outgoing:
-                yield "%s unit (%s) with children: %s" % (ETags.Unanalyzable, self.node_id, self.node) # FIXME: should include punctuation and terminal?
-        if ETags.Ground in self.incoming:
-            s = self.outgoing_tags.intersection({ETags.ParallelScene, ETags.Linker, ETags.Ground})
-            if s:
-                yield "%s unit (%s) with %s children: %s" % (ETags.Ground, self.node_id, join(s), self.node)
-        if ETags.ParallelScene in self.incoming:
-            s = self.outgoing_tags.intersection({ETags.ParallelScene, ETags.Linker})
-            if s:
-                yield "%s unit (%s) with %s children: %s" % (ETags.ParallelScene, self.node_id, join(s), self.node)
-        if ETags.State in self.outgoing_tags:
-            forbidden = {ETags.ParallelScene, ETags.Linker, ETags.Process, ETags.Center, ETags.Elaborator,
-                         ETags.Quantifier, ETags.Connector}
-            s = forbidden.intersection(self.outgoing_tags)
-            if s:
-                yield "%s unit with %s siblings: under %s" % (ETags.State, join(s), self.node)
-        if ETags.Adverbial in self.outgoing_tags:
-            s = self.outgoing_tags.intersection({ETags.ParallelScene, ETags.Linker})
-            if s:
-                yield "%s unit with %s siblings: under %s" % (ETags.Adverbial, join(s), self.node)
-        if ETags.Center in self.outgoing_tags:
-            s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, {ETags.Adverbial},
-                                                         NON_SCENE, SUPP_FUNC)))
-            if s:
-                yield "%s unit with %s siblings: under %s" % (ETags.Center, join(s), self.node)
-        if any(self.outgoing_tags.intersection({ETags.Time, ETags.Participant})):
-            forbidden = set.union(NON_SCENE, ETags.ParallelScene, ETags.Linker)
-            s = forbidden.intersection(self.outgoing_tags)
+            yield "%s unit (%s) with %s children: %s" % (join(edges_to_check), self.node_id, join(s), self.node)
+        if (ETags.Unanalyzable in self.incoming) and self.outgoing:
+            yield "%s unit (%s) with children: %s" % (ETags.Unanalyzable, self.node_id, self.node) # FIXME: should include punctuation and terminal?
+        s = self.outgoing_tags.intersection({ETags.ParallelScene, ETags.Linker, ETags.Ground})
+        if (ETags.Ground in self.incoming) and s:
+            yield "%s unit (%s) with %s children: %s" % (ETags.Ground, self.node_id, join(s), self.node)
+        s = self.outgoing_tags.intersection({ETags.ParallelScene, ETags.Linker})
+        if (ETags.ParallelScene in self.incoming) and s:
+            yield "%s unit (%s) with %s children: %s" % (ETags.ParallelScene, self.node_id, join(s), self.node)
+        forbidden = {ETags.ParallelScene, ETags.Linker, ETags.Process, ETags.Center, ETags.Elaborator,
+                     ETags.Quantifier, ETags.Connector}
+        s = forbidden.intersection(self.outgoing_tags)
+        if (ETags.State in self.outgoing_tags) and s:
+            yield "%s unit with %s siblings: under %s" % (ETags.State, join(s), self.node)
+        s = self.outgoing_tags.intersection({ETags.ParallelScene, ETags.Linker})
+        if (ETags.Adverbial in self.outgoing_tags) and s:
+            yield "%s unit with %s siblings: under %s" % (ETags.Adverbial, join(s), self.node)
+        s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, {ETags.Adverbial},
+                                                     NON_SCENE, SUPP_FUNC)))
+        if (ETags.Center in self.outgoing_tags) and s:
+            yield "%s unit with %s siblings: under %s" % (ETags.Center, join(s), self.node)
+        forbidden = set.union(NON_SCENE, ETags.ParallelScene, ETags.Linker)
+        s = forbidden.intersection(self.outgoing_tags)
+        if (any(self.outgoing_tags.intersection({ETags.Time, ETags.Participant}))) and s:
             edges_to_check = [k for k in self.outgoing_tags if k in (ETags.Time, ETags.Participant)]
-            if s:
-                yield "%s unit with %s siblings: under %s" % (join(edges_to_check), join(s), self.node)
-        if any(self.outgoing_tags.intersection({ETags.ParallelScene, ETags.Linker})):
-            forbidden = set.union(NON_SCENE, SCENE)
-            s = self.outgoing_tags.intersection(forbidden)
+            yield "%s unit with %s siblings: under %s" % (join(edges_to_check), join(s), self.node)
+        forbidden = set.union(NON_SCENE, SCENE)
+        s = self.outgoing_tags.intersection(forbidden)
+        if (any(self.outgoing_tags.intersection({ETags.ParallelScene, ETags.Linker}))) and s:
             edges_to_check = self.outgoing_tags.intersection({ETags.ParallelScene, ETags.Linker})
-            if s:
-                yield "%s unit with %s siblings: under %s" % (join(edges_to_check), join(s), self.node)
-        if ETags.Elaborator in self.outgoing_tags:
-            forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground, ETags.Connector)
-            s = forbidden.intersection(self.outgoing_tags)
-            if s:
-                yield "%s unit with %s siblings: under %s" % (ETags.Elaborator, join(s), self.node)
-        if ETags.Quantifier in self.outgoing_tags:
-            forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground)
-            s = forbidden.intersection(self.outgoing_tags)
-            if s:
-                yield "%s unit with %s siblings: under %s" % (ETags.Quantifier, join(s), self.node)
-        if ETags.Connector in self.outgoing_tags:
-            forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground, ETags.Elaborator, ETags.Quantifier)
-            s = forbidden.intersection(self.outgoing_tags)
-            if s:
-                yield "%s unit with %s siblings: under %s" % (ETags.Connector, join(s), self.node)
-        if ETags.Process in self.outgoing_tags:
-            forbidden = set.union(NON_SCENE, ETags.State)
-            s = forbidden.intersection(self.outgoing_tags)
-            if s:
-                yield "%s unit with %s siblings: under %s" % (ETags.Process, join(s), self.node)
+            yield "%s unit with %s siblings: under %s" % (join(edges_to_check), join(s), self.node)
+        forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground, ETags.Connector)
+        s = forbidden.intersection(self.outgoing_tags)
+        if (ETags.Elaborator in self.outgoing_tags) and s:
+            yield "%s unit with %s siblings: under %s" % (ETags.Elaborator, join(s), self.node)
+        forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground)
+        s = forbidden.intersection(self.outgoing_tags)
+        if (ETags.Quantifier in self.outgoing_tags) and s:
+            yield "%s unit with %s siblings: under %s" % (ETags.Quantifier, join(s), self.node)
+        forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground, ETags.Elaborator,
+                              ETags.Quantifier)
+        s = forbidden.intersection(self.outgoing_tags)
+        if (ETags.Connector in self.outgoing_tags) and s:
+            yield "%s unit with %s siblings: under %s" % (ETags.Connector, join(s), self.node)
+        forbidden = set.union(NON_SCENE, ETags.State)
+        s = forbidden.intersection(self.outgoing_tags)
+        if (ETags.Process in self.outgoing_tags) and s:
+            yield "%s unit with %s siblings: under %s" % (ETags.Process, join(s), self.node)
         if any(self.outgoing_tags.intersection({ETags.Elaborator, ETags.Quantifier, ETags.Connector})):
             edges_to_check = list(self.outgoing_tags.intersection({ETags.Elaborator, ETags.Quantifier, ETags.Connector}))
             if ETags.Center not in self.outgoing_tags:
@@ -198,9 +185,8 @@ class NodeValidator:
             required = {ETags.State, ETags.Process}
             if ETags.State not in self.outgoing_tags and ETags.Process not in self.outgoing_tags:
                 yield "%s unit without %s siblings: under %s" % (join(edges_to_check), join(required), self.node)
-        if ETags.Linker in self.outgoing_tags:
-            if ETags.ParallelScene not in self.outgoing_tags:
-                yield "%s unit without %s sibling: under %s" % (ETags.Linker, ETags.ParallelScene, self.node)
+        if (ETags.Linker in self.outgoing_tags) and (ETags.ParallelScene not in self.outgoing_tags):
+            yield "%s unit without %s sibling: under %s" % (ETags.Linker, ETags.ParallelScene, self.node)
         if any(self.incoming_tags.intersection({ETags.State, ETags.Process})):
             edges_to_check = list(self.incoming_tags.intersection({ETags.State, ETags.Process}))
             forbidden = set.union(SCENE, ETags.ParallelScene, ETags.Linker, ETags.Ground)
@@ -209,19 +195,17 @@ class NodeValidator:
                 if not isinstance(i, layer0.Terminal):
                     if i.parallel_scenes or i.linkers or i.grounds or i.participants or i.state or i.process or i.adverbials or i.times:
                         yield "%s unit (%s) with at least one of the %s descendants: %s" % (join(edges_to_check), self.node_id, join(forbidden), self.node)
-        if ETags.Relator in self.incoming_tags or ETags.Function in self.incoming_tags:
-            s = [e for e in self.node.incoming if
-                         e.attrib.get('remote') and e.tag in {ETags.Relator, ETags.Function}]
-            if s:
-                yield "%s remote edges (%s)" % (join({e.tag for e in s}), join(s))
-        if not self.incoming:
-            s = self.outgoing_tags.difference(set.union({ETags.ParallelScene, ETags.Linker, ETags.Function, ETags.Punctuation}, LINKAGE))
-            if s:
-                yield "%s unit (%s) at top level" % (join(s), self.node_id)
-        if ETags.Unanalyzable in self.incoming_tags:
-            s = [e for e in self.node.incoming if ETags.Unanalyzable in e.tags and len(set(e.tags))==1]
-            if s:
-                yield "%s unit (%s) without another label" % (ETags.Unanalyzable, self.node_id)
+        s = [e for e in self.node.incoming if
+             e.attrib.get('remote') and e.tag in {ETags.Relator, ETags.Function}]
+        if (ETags.Relator in self.incoming_tags or ETags.Function in self.incoming_tags) and s:
+            yield "%s remote edges (%s)" % (join({e.tag for e in s}), join(s))
+        s = self.outgoing_tags.difference(set.union({ETags.ParallelScene, ETags.Linker, ETags.Function,
+                                                     ETags.Punctuation}, LINKAGE))
+        if (not self.incoming) and s:
+            yield "%s unit (%s) at top level" % (join(s), self.node_id)
+        s = [e for e in self.node.incoming if ETags.Unanalyzable in e.tags and len(set(e.tags)) == 1]
+        if (ETags.Unanalyzable in self.incoming_tags) and s:
+            yield "%s unit (%s) without another label" % (ETags.Unanalyzable, self.node_id)
 
 
 
