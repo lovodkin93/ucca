@@ -111,7 +111,7 @@ class NodeValidator:
             s = self.outgoing.get(tag, ())
             if len(s) > 1:
                 yield "Unit (%s) with multiple %s children (%s)" % (self.node_id, tag, join(e.child for e in s))
-        s = self.outgoing_tags.difference((set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC)))
+        s = self.outgoing_tags.difference(set.union({ETags.Terminal, ETags.Punctuation}, NON_SCENE, SUPP_FUNC))
         if (ETags.Function in self.incoming) and s:
             yield "%s unit (%s) with %s children: %s" % (ETags.Function, self.node_id, join(s), self.node)
         if ETags.Linker in self.incoming_tags and linkage and ETags.LinkRelation not in self.incoming_tags:
