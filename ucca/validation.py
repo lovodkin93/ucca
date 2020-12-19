@@ -122,6 +122,7 @@ class NodeValidator:
                 if len(edges) > 1:
                     yield "Multiple edges from %s to %s: %s" % (self.node_id, child_id, ", ".join(
                         "%d %s" % (len(e), t) for t, e in tag_to_edge(edges).items()))
+                    # hello world
 
     def validate_linkage(self):
         if self.node.incoming:
