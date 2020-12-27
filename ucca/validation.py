@@ -5,6 +5,7 @@ from operator import attrgetter
 from ucca import layer0, layer1
 from ucca.layer0 import NodeTags as L0Tags
 from ucca.layer1 import EdgeTags as ETags, NodeTags as L1Tags
+from logging import warning
 
 LINKAGE = {ETags.LinkArgument, ETags.LinkRelation}
 NON_SCENE = {ETags.Center, ETags.Elaborator, ETags.Quantifier, ETags.Connector}
@@ -196,9 +197,13 @@ class NodeValidator:
                     if i.parallel_scenes or i.linkers or i.grounds or i.participants or i.state or i.process or i.adverbials or i.times:
                         yield "%s unit (%s) with at least one of the %s descendants: %s" % (join(edges_to_check), self.node_id, join(forbidden), self.node)
         s = [e for e in self.node.incoming if
-             e.attrib.get('remote') and e.tag in {ETags.Relator, ETags.Function}]
-        if (ETags.Relator in self.incoming_tags or ETags.Function in self.incoming_tags) and s:
-            yield "%s remote edges (%s)" % (join({e.tag for e in s}), join(s))
+             e.attrib.get('remote') and e.tag == ETags.Function]
+        if (ETags.Function in self.incoming_tags) and s:
+            yield "%s remote edges (%s)" % (ETags.Function, join(s))
+        s = [e for e in self.node.incoming if
+             e.attrib.get('remote') and e.tag == ETags.Relator]
+        if (ETags.Relator in self.incoming_tags) and s:
+            warning("Relator remote edges (%s)" % (join(s)))
         s = self.outgoing_tags.difference(set.union({ETags.ParallelScene, ETags.Linker, ETags.Function,
                                                      ETags.Punctuation}, LINKAGE))
         if (not self.incoming) and s:
