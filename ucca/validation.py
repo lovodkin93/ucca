@@ -204,6 +204,7 @@ class NodeValidator:
              e.attrib.get('remote') and e.tag == ETags.Relator]
         if (ETags.Relator in self.incoming_tags) and s:
             warning("Relator remote edges (%s)" % (join(s)))
+
         s = self.outgoing_tags.difference(set.union({ETags.ParallelScene, ETags.Linker, ETags.Function,
                                                      ETags.Punctuation}, LINKAGE))
         if (not self.incoming) and s:

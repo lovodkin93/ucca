@@ -4,6 +4,7 @@ import logging
 import sys
 
 from requests.exceptions import HTTPError
+import json
 
 from ucca.convert import to_json, to_text
 from ucca.ioutil import get_passages_with_progress_bar
@@ -52,7 +53,7 @@ class TaskUploader(ServerAccessor):
                 yield task
         except HTTPError as e:
             try:
-                raise ValueError(e.response.json()["detail"]) from e
+                raise ValueError((e.response.json() if e.response else json.loads(e.args[0]))["detail"]) from e
             except JSONDecodeError:
                 raise ValueError(e.response.text) from e
             finally:

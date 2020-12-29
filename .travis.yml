@@ -1,10 +1,6 @@
 sudo: false
 language: python
 python: 3.6
-addons:
-  apt:
-    packages:
-      - pandoc
 env:
   global:
     - TWINE_USERNAME=danielh

@@ -22,16 +22,8 @@ for requirements_file in glob("requirements.*txt"):
     with open(requirements_file) as f:
         (extras_require.setdefault(suffix, []) if suffix else install_requires).extend(f.read().splitlines())
 
-try:
-    import pypandoc
-    try:
-        pypandoc.convert_file("README.md", "rst", outputfile="README.rst")
-    except (IOError, ImportError, RuntimeError):
-        pass
-    long_description = pypandoc.convert_file("README.md", "rst")
-except (IOError, ImportError, RuntimeError):
-    long_description = ""
-
+with open('README.md', encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(name="UCCA",
       version=VERSION,
@@ -39,6 +31,7 @@ setup(name="UCCA",
       extras_require=extras_require,
       description="Universal Conceptual Cognitive Annotation",
       long_description=long_description,
+      long_description_content_type='text/markdown',
       author="Daniel Hershcovich",
       author_email="danielh@cs.huji.ac.il",
       url="https://github.com/huji-nlp/ucca",
