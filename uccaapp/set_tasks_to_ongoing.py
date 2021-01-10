@@ -6,9 +6,10 @@ from tqdm import tqdm
 
 from uccaapp.api import ServerAccessor
 
-desc = """Sets the status of submitted tasks to ONGOING"""
+desc = """Sets the status of submitted tasks to ONGOING or SUBMITTED"""
 
 ONGOING_STATUS = "ONGOING"
+SUBMITTED_STATUS = "SUBMITTED"
 
 
 class TaskStatusSetter(ServerAccessor):
@@ -29,11 +30,13 @@ class TaskStatusSetter(ServerAccessor):
     @staticmethod
     def add_arguments(argparser):
         argparser.add_argument("filename", help="file with lines, each with a different task ID")
+        argument_parser.add_argument("-s", "--status", help="should be ONGOING or SUBMITTED",
+                                     choices=[ONGOING_STATUS, SUBMITTED_STATUS])
         ServerAccessor.add_arguments(argparser)
 
 
 def main(**kwargs):
-    list(TaskStatusSetter(**kwargs).set_task_status(status=ONGOING_STATUS, **kwargs))
+    list(TaskStatusSetter(**kwargs).set_task_status(**kwargs))
 
 
 if __name__ == "__main__":
