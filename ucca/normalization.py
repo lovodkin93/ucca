@@ -177,6 +177,10 @@ def detach_punct(l1):
     for node in l1.all:
         if node.tag == L1Tags.Punctuation:
             destroy(node)
+        else:
+            for edge in node:
+                if edge.child.tag == L0Tags.Punct:
+                    destroy(edge)
 
 
 def reattach_terminals(l0, l1):
